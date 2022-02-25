@@ -20,7 +20,7 @@ func sendPost(url string, authToken string, bodyByte []byte) (string, error) {
 		return "", err
 	}
 
-	req.Header.Add("authtoken", authToken)
+	req.Header.Add("token", authToken)
 	req.Header.Add("Charset", "UTF-8")
 	req.Header.Add("Content-Type", "application/json")
 

@@ -47,6 +47,7 @@ func GetAccessToken(cfg GeTuiConfig) (AuthResultData, error) {
 	}
 
 	if tokenResult.Code != 0 {
+		fmt.Println("getui auth failed: ", result)
 		return data, fmt.Errorf(tokenResult.Msg)
 	}
 
