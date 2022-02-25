@@ -16,7 +16,7 @@ type GeTuiNotification struct {
 }
 
 type GeTuiPushMessage struct {
-	Notification GeTuiNotification `json:"notification"`
+	Notification *GeTuiNotification `json:"notification"`
 }
 
 type GeTui_iOS_Alert struct {
@@ -25,27 +25,27 @@ type GeTui_iOS_Alert struct {
 }
 
 type GeTui_iOS_Aps struct {
-	Alert GeTui_iOS_Alert `json:"alert"`
-	Sound string          `json:"sound"`
+	Alert *GeTui_iOS_Alert `json:"alert"`
+	Sound string           `json:"sound"`
 }
 
 type GeTuiChannel_iOS struct {
-	Type    string        `json:"type"`
-	Payload string        `json:"payload,omitempty"`
-	Aps     GeTui_iOS_Aps `json:"aps"`
+	Type    string         `json:"type"`
+	Payload string         `json:"payload,omitempty"`
+	Aps     *GeTui_iOS_Aps `json:"aps"`
 }
 
 type GeTuiPushChannel struct {
-	Ios GeTuiChannel_iOS `json:"ios"`
+	Ios *GeTuiChannel_iOS `json:"ios"`
 }
 
-func defaultSettings() GeTuiSettings {
-	setting := GeTuiSettings{Tts: 360000}
+func defaultSettings() *GeTuiSettings {
+	setting := &GeTuiSettings{Tts: 360000}
 	return setting
 }
 
-func singleAudience(cid string) GeTuiAudience {
-	audience := GeTuiAudience{}
+func singleAudience(cid string) *GeTuiAudience {
+	audience := &GeTuiAudience{}
 	audience.Cid = []string{cid}
 	return audience
 }

@@ -7,11 +7,11 @@ import (
 )
 
 type GeTuiSingleMessage struct {
-	RequestID   string           `json:"request_id"`
-	Settings    GeTuiSettings    `json:"settings"`
-	Audience    GeTuiAudience    `json:"audience"`
-	PushMessage GeTuiPushMessage `json:"push_message"`
-	PushChannel GeTuiPushChannel `json:"push_channel"`
+	RequestID   string            `json:"request_id"`
+	Settings    *GeTuiSettings    `json:"settings"`
+	Audience    *GeTuiAudience    `json:"audience"`
+	PushMessage *GeTuiPushMessage `json:"push_message"`
+	PushChannel *GeTuiPushChannel `json:"push_channel"`
 }
 
 func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, pushMsg GeTuiPushMessage, channel GeTuiPushChannel) error {
@@ -21,8 +21,8 @@ func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, pushMsg GeTuiPush
 	params := &GeTuiSingleMessage{RequestID: reqid}
 	params.Settings = defaultSettings()
 	params.Audience = singleAudience(cid)
-	params.PushMessage = pushMsg
-	params.PushChannel = channel
+	params.PushMessage = &pushMsg
+	params.PushChannel = &channel
 
 	bodyByte, err := json.Marshal(params)
 	if err != nil {
