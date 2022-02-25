@@ -3,7 +3,6 @@ package getui
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 )
 
 type GeTuiSingleMessage struct {
@@ -15,9 +14,7 @@ type GeTuiSingleMessage struct {
 }
 
 func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, pushMsg GeTuiPushMessage, channel GeTuiPushChannel) error {
-	if len(reqid) == 0 {
-		reqid = fmt.Sprintf("gtreq-%s-%d", cfg.AppID, time.Now().Unix())
-	}
+	reqid = newRequestID(reqid, cfg)
 	params := &GeTuiSingleMessage{RequestID: reqid}
 	params.Settings = defaultSettings()
 	params.Audience = singleAudience(cid)
@@ -40,7 +37,7 @@ func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, pushMsg GeTuiPush
 		return err
 	}
 	if resultMap["code"].(float64) != 0 {
-		err = fmt.Errorf("GeTui.pushSingle error: %v", resultMap)
+		err = fmt.Errorf("GeTui.PushSingle error: %v", resultMap)
 		return err
 	}
 	return nil

@@ -1,5 +1,10 @@
 package getui
 
+import (
+	"fmt"
+	"time"
+)
+
 type GeTuiSettings struct {
 	Tts int64 `json:"tts"`
 }
@@ -48,4 +53,11 @@ func singleAudience(cid string) *GeTuiAudience {
 	audience := &GeTuiAudience{}
 	audience.Cid = []string{cid}
 	return audience
+}
+
+func newRequestID(reqid string, cfg GeTuiConfig) string {
+	if len(reqid) > 10 {
+		return reqid
+	}
+	return fmt.Sprintf("gtreq-%s-%d", cfg.AppID, time.Now().UnixNano())
 }
