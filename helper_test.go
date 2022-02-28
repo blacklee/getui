@@ -6,17 +6,24 @@ import (
 	"io/ioutil"
 )
 
-func loadAppConfig() GeTuiConfig {
-	hash := _loadFileToMap("myapp.json")
-	cfg := GeTuiConfig{}
-	cfg.AppID = hash["appid"].(string)
-	cfg.AppKey = hash["appkey"].(string)
-	cfg.Master = hash["master"].(string)
-	return cfg
-}
+var testConfig GeTuiConfig
+var testAuthToken string
+var testCids []string
 
-func loadTestInfo() map[string]interface{} {
-	return _loadFileToMap("test.json")
+func setup() {
+	GTV2_DEBUG = true
+	hash := _loadFileToMap("test.json")
+	appcfg := hash["config"].(map[string]interface{})
+	testConfig.AppID = appcfg["appid"].(string)
+	testConfig.AppKey = appcfg["appkey"].(string)
+	testConfig.Master = appcfg["master"].(string)
+
+	pushcfg := hash["push"].(map[string]interface{})
+	testAuthToken = pushcfg["token"].(string)
+	cids := pushcfg["cids"].([]interface{})
+	for _, cid := range cids {
+		testCids = append(testCids, cid.(string))
+	}
 }
 
 func _loadFileToMap(ff string) map[string]interface{} {

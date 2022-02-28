@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var GTV2_DEBUG bool = true
+var GTV2_DEBUG bool = false
 
 type GeTuiSettings struct {
 	Tts int64 `json:"tts"`

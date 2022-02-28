@@ -3,20 +3,18 @@ package getui
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestPushSingle(t *testing.T) {
-	cfg := loadAppConfig()
-	hash := loadTestInfo()
-	token := hash["token"].(string)
-	cids := hash["cid"].([]interface{})
-	cid := cids[0].(string)
-	reqid := newRequestID("", cfg)
+	setup()
+	cid := testCids[0]
+	reqid := newRequestID("", testConfig)
 
-	title := "hello title---"
-	body := "hello msg body..."
+	title := "Hello Go-GeTui"
+	body := fmt.Sprintf("Hello, %s", time.Now().Format("2006-01-02 15:04:05"))
 
-	singleMessage := CreateGeTuiSingleMessage(reqid, cid, cfg, title, body, "none")
-	err := PushSingle(token, reqid, cid, cfg, *singleMessage)
+	singleMessage := CreateGeTuiSingleMessage(reqid, cid, testConfig, title, body, "none")
+	err := PushSingle(testAuthToken, reqid, cid, testConfig, *singleMessage)
 	fmt.Println(err)
 }

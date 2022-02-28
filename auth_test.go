@@ -7,8 +7,8 @@ import (
 )
 
 func TestGetAuthToken(t *testing.T) {
-	cfg := loadAppConfig()
-	data, err := GetAccessToken(cfg)
+	setup()
+	data, err := GetAccessToken(testConfig)
 	if err != nil {
 		panic(err)
 	}
