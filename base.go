@@ -2,8 +2,11 @@ package getui
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 )
+
+var GTV2_DEBUG bool = true
 
 type GeTuiSettings struct {
 	Tts int64 `json:"tts"`
@@ -59,5 +62,5 @@ func newRequestID(reqid string, cfg GeTuiConfig) string {
 	if len(reqid) > 10 {
 		return reqid
 	}
-	return fmt.Sprintf("gtreq-%s-%d", cfg.AppID, time.Now().UnixNano())
+	return fmt.Sprintf("gtreq-%s-%d-%d", cfg.AppID[0:10], time.Now().UnixNano()%100000000, rand.Int63()%1000000)
 }

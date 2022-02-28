@@ -13,21 +13,50 @@ type GeTuiSingleMessage struct {
 	PushChannel *GeTuiPushChannel `json:"push_channel"`
 }
 
-func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, pushMsg GeTuiPushMessage, channel GeTuiPushChannel) error {
+func CreateGeTuiSingleMessage(reqid, cid string, cfg GeTuiConfig, title, body, clickType string) *GeTuiSingleMessage {
 	reqid = newRequestID(reqid, cfg)
-	params := &GeTuiSingleMessage{RequestID: reqid}
-	params.Settings = defaultSettings()
-	params.Audience = singleAudience(cid)
-	params.PushMessage = &pushMsg
-	params.PushChannel = &channel
+	singleMsg := &GeTuiSingleMessage{RequestID: reqid}
+	singleMsg.Settings = defaultSettings()
+	singleMsg.Audience = singleAudience(cid)
 
-	bodyByte, err := json.Marshal(params)
+	notification := GeTuiNotification{
+		Title:     title,
+		Body:      body,
+		ClickType: clickType,
+	}
+	ios := GeTuiChannel_iOS{
+		Type: "notify",
+		Aps: &GeTui_iOS_Aps{
+			Sound: "default",
+			Alert: &GeTui_iOS_Alert{
+				Title: title,
+				Body:  body,
+			},
+		},
+	}
+	channel := GeTuiPushChannel{Ios: &ios}
+	msg := &GeTuiPushMessage{Notification: &notification}
+
+	singleMsg.PushMessage = msg
+	singleMsg.PushChannel = &channel
+
+	return singleMsg
+}
+
+func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, singleMessage GeTuiSingleMessage) error {
+	reqid = newRequestID(reqid, cfg)
+
+	bodyByte, err := json.Marshal(singleMessage)
 	if err != nil {
 		return err
 	}
 
 	pushSingleUrl := fmt.Sprintf("%s%s/push/single/cid", baseURL, cfg.AppID)
 	result, err := sendPost(pushSingleUrl, authToken, bodyByte)
+	if GTV2_DEBUG {
+		fmt.Println(reqid, "push single body:", pushSingleUrl, "\n", string(bodyByte))
+		fmt.Println(reqid, "push single result:\n", result)
+	}
 	if err != nil {
 		return err
 	}

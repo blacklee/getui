@@ -9,25 +9,14 @@ func TestPushSingle(t *testing.T) {
 	cfg := loadAppConfig()
 	hash := loadTestInfo()
 	token := hash["token"].(string)
-	cids := hash["cid"].([]string)
-	cid := cids[0]
-	notification := GeTuiNotification{
-		Title:     "Hello title",
-		Body:      "Hello body",
-		ClickType: "none",
-	}
-	ios := GeTuiChannel_iOS{
-		Type: "notify",
-		Aps: &GeTui_iOS_Aps{
-			Sound: "default",
-			Alert: &GeTui_iOS_Alert{
-				Title: "hello title",
-				Body:  "hello body",
-			},
-		},
-	}
-	channel := GeTuiPushChannel{Ios: &ios}
-	msg := GeTuiPushMessage{Notification: &notification}
-	err := PushSingle(token, "", cid, cfg, msg, channel)
+	cids := hash["cid"].([]interface{})
+	cid := cids[0].(string)
+	reqid := newRequestID("", cfg)
+
+	title := "hello title---"
+	body := "hello msg body..."
+
+	singleMessage := CreateGeTuiSingleMessage(reqid, cid, cfg, title, body, "none")
+	err := PushSingle(token, reqid, cid, cfg, *singleMessage)
 	fmt.Println(err)
 }
