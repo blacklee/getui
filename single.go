@@ -43,9 +43,7 @@ func CreateGeTuiSingleMessage(reqid, cid string, cfg GeTuiConfig, title, body, c
 	return singleMsg
 }
 
-func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, singleMessage GeTuiSingleMessage) error {
-	reqid = newRequestID(reqid, cfg)
-
+func PushSingle(authToken, cid string, cfg GeTuiConfig, singleMessage GeTuiSingleMessage) error {
 	bodyByte, err := json.Marshal(singleMessage)
 	if err != nil {
 		return err
@@ -54,8 +52,8 @@ func PushSingle(authToken, reqid, cid string, cfg GeTuiConfig, singleMessage GeT
 	pushSingleUrl := fmt.Sprintf("%s%s/push/single/cid", baseURL, cfg.AppID)
 	result, err := sendPost(pushSingleUrl, authToken, bodyByte)
 	if GTV2_DEBUG {
-		fmt.Println(reqid, "push single body:", pushSingleUrl, "\n", string(bodyByte))
-		fmt.Println(reqid, "push single result:\n", result)
+		fmt.Println(singleMessage.RequestID, "push single body:", pushSingleUrl, "\n", string(bodyByte))
+		fmt.Println(singleMessage.RequestID, "push single result:\n", result)
 	}
 	if err != nil {
 		return err
